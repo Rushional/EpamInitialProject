@@ -10,9 +10,13 @@ public class Reservation {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
-//    TODO: one-to-one link to a parking slot
+    @ManyToOne
+    @JoinColumn(name = "slot_id", nullable = false)
+    private ParkingSlot parkingSlot;
 
-//    TODO: one-to-one link to a car
+    @ManyToOne
+    @JoinColumn(name = "car_id", nullable = false)
+    private Car car;
 
     @Column(name = "start_time", nullable = false)
     private Date startDate;

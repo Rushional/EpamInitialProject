@@ -1,11 +1,11 @@
 package com.parking_project.parking.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "customer")
 public class Customer {
-//    TODO: do we need a @Column annotation here too?
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
@@ -32,9 +32,20 @@ public class Customer {
         return phoneNumber;
     }
 
-//    TODO: many-to-many link with Car
-//     this is prooobably the owner side?
+    @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "customer_car",
+            joinColumns = { @JoinColumn(name = "customer_id")},
+            inverseJoinColumns = { @JoinColumn(name = "car_id") }
+    )
+    ArrayList<Car> cars = new ArrayList<>();
 
-//    TODO: many-to-many link with UserRole
-//     this is the owner side
+    @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "customer_role",
+            joinColumns = { @JoinColumn(name = "customer_id")},
+            inverseJoinColumns = { @JoinColumn(name = "role_id") }
+    )
+    ArrayList<Car> roles = new ArrayList<>();
+
 }

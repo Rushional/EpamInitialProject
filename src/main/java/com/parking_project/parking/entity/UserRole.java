@@ -1,11 +1,11 @@
 package com.parking_project.parking.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "user_role")
 public class UserRole {
-//    TODO: do we need a @Column annotation here too?
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
@@ -17,6 +17,6 @@ public class UserRole {
         return roleName;
     }
 
-//    TODO: many-to-many link with Customer
-//     this is the inverse side
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    private ArrayList<Customer> customers = new ArrayList<>();
 }

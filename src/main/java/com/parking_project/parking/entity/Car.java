@@ -2,6 +2,7 @@ package com.parking_project.parking.entity;
 
 // Not sure if that's the right import - I totally might be using wrong annotations
 import javax.persistence.*;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "car")
@@ -9,6 +10,9 @@ public class Car {
     @Id
 //    TODO: Will we have a problem with id auto generation?
 //     I mean, it might want to generate ID's automatically, and we don't want that
+//    Well, if it's easy to fix, we'll fix it.
+//    If it's at least somewhat complicated to fix, it's better to just add a column of numerical id's.
+//    And if there isn't a problem, then why am I still writing this WHERE'S THE PR BUTTON?!
     @Column(name = "license_plate", length = 16, nullable = false, unique = true)
     private String licensePlate;
 
@@ -16,8 +20,11 @@ public class Car {
         return licensePlate;
     }
 
-//    TODO: many-to-many link with Customer
-//     inverse side I think
+    @ManyToMany(mappedBy = "cars", fetch = FetchType.LAZY)
+    private ArrayList<Customer> customers = new ArrayList<>();
+
+    @OneToMany(mappedBy="car")
+    private ArrayList<Reservation> reservations = new ArrayList<>();
 
 //    TODO: do we need equals and hashCode?
 

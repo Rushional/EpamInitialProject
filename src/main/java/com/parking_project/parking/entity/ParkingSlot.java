@@ -2,6 +2,7 @@ package com.parking_project.parking.entity;
 
 
 import javax.persistence.*;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "parking_slot")
@@ -13,15 +14,18 @@ public class ParkingSlot {
     @Column(name = "description", length = 2048, nullable = true, unique = false)
     private String description;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private StatusType status;
-
     public String getDescription() {
         return description;
     }
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private StatusType status;
+
     public StatusType getStatus() {
         return status;
     }
+
+    @OneToMany(mappedBy="parkingSlot")
+    private ArrayList<Reservation> reservations = new ArrayList<>();
 }
