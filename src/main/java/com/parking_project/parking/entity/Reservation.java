@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "SLOT_REQUEST")
-public class SlotRequest {
+@Table(name = "reservation")
+public class Reservation {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
@@ -14,14 +14,14 @@ public class SlotRequest {
 
 //    TODO: one-to-one link to a car
 
-    @Column(name = "START_TIME", nullable = false)
+    @Column(name = "start_time", nullable = false)
     private Date startDate;
 
     public Date getStartDate() {
         return startDate;
     }
 
-    @Column(name = "END_TIME", nullable = false)
+    @Column(name = "end_time", nullable = false)
     private Date endDate;
 
     public Date getEndDate() {

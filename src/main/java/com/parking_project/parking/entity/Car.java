@@ -3,14 +3,13 @@ package com.parking_project.parking.entity;
 // Not sure if that's the right import - I totally might be using wrong annotations
 import javax.persistence.*;
 
-// Not sure if table name should be in uppercase or lowercase
 @Entity
-@Table(name = "CAR")
+@Table(name = "car")
 public class Car {
     @Id
 //    TODO: Will we have a problem with id auto generation?
 //     I mean, it might want to generate ID's automatically, and we don't want that
-    @Column(name = "LICENSE_PLATE", length = 16, nullable = false, unique = true)
+    @Column(name = "license_plate", length = 16, nullable = false, unique = true)
     private String licensePlate;
 
     public String getLicensePlate() {
