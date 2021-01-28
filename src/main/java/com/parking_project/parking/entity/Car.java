@@ -1,12 +1,20 @@
 package com.parking_project.parking.entity;
 
 // Not sure if that's the right import - I totally might be using wrong annotations
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "car")
+@NoArgsConstructor
+@Setter
+@Getter
 public class Car {
     @Id
 //    TODO: Will we have a problem with id auto generation?

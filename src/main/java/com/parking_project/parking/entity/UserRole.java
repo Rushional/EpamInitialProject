@@ -1,11 +1,18 @@
 package com.parking_project.parking.entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "user_role")
+@NoArgsConstructor
+@Setter
+@Getter
 public class UserRole {
     @Id
     @Column(name = "role_id")

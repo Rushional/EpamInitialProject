@@ -1,10 +1,17 @@
 package com.parking_project.parking.entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "reservation")
+@NoArgsConstructor
+@Setter
+@Getter
 public class Reservation {
     @Id
 //    Not sure I need to set a particular column name for this one, but I'm doing it just in case

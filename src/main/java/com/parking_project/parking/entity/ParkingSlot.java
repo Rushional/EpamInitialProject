@@ -1,12 +1,19 @@
 package com.parking_project.parking.entity;
 
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "parking_slot")
+@NoArgsConstructor
+@Setter
+@Getter
 public class ParkingSlot {
     @Id
     @Column(name = "slot_id")
