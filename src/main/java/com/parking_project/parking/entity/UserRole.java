@@ -2,11 +2,13 @@ package com.parking_project.parking.entity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "user_role")
 public class UserRole {
     @Id
+    @Column(name = "role_id")
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
@@ -18,5 +20,5 @@ public class UserRole {
     }
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
-    private ArrayList<Customer> customers = new ArrayList<>();
+    private List<Customer> customers = new ArrayList<>();
 }

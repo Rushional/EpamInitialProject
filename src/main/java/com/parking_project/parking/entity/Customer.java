@@ -2,11 +2,13 @@ package com.parking_project.parking.entity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "customer")
 public class Customer {
     @Id
+    @Column(name = "customer_id")
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
@@ -36,9 +38,9 @@ public class Customer {
     @JoinTable(
             name = "customer_car",
             joinColumns = { @JoinColumn(name = "customer_id")},
-            inverseJoinColumns = { @JoinColumn(name = "car_id") }
+            inverseJoinColumns = { @JoinColumn(name = "license_plate") }
     )
-    ArrayList<Car> cars = new ArrayList<>();
+    List<Car> cars = new ArrayList<>();
 
     @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
     @JoinTable(
@@ -46,6 +48,8 @@ public class Customer {
             joinColumns = { @JoinColumn(name = "customer_id")},
             inverseJoinColumns = { @JoinColumn(name = "role_id") }
     )
-    ArrayList<Car> roles = new ArrayList<>();
+    List<Car> roles = new ArrayList<>();
 
+    @OneToMany(mappedBy="customer")
+    private List<Reservation> reservations = new ArrayList<>();
 }
