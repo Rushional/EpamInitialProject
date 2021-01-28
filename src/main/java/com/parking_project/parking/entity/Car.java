@@ -3,6 +3,7 @@ package com.parking_project.parking.entity;
 // Not sure if that's the right import - I totally might be using wrong annotations
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "car")
@@ -21,10 +22,10 @@ public class Car {
     }
 
     @ManyToMany(mappedBy = "cars", fetch = FetchType.LAZY)
-    private ArrayList<Customer> customers = new ArrayList<>();
+    private List<Customer> customers = new ArrayList<>();
 
     @OneToMany(mappedBy="car")
-    private ArrayList<Reservation> reservations = new ArrayList<>();
+    private List<Reservation> reservations = new ArrayList<>();
 
 //    TODO: do we need equals and hashCode?
 

@@ -3,11 +3,13 @@ package com.parking_project.parking.entity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "parking_slot")
 public class ParkingSlot {
     @Id
+    @Column(name = "slot_id")
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
@@ -27,5 +29,5 @@ public class ParkingSlot {
     }
 
     @OneToMany(mappedBy="parkingSlot")
-    private ArrayList<Reservation> reservations = new ArrayList<>();
+    private List<Reservation> reservations = new ArrayList<>();
 }
