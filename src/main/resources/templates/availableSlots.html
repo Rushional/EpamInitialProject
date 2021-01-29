@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Available slots</title>
+    <h1>Available slots</h1>
+</head>
+<body>
+<div class="container">
+
+    <table class="table table-striped table-bordered">
+        <tr>
+            <td>Slot ID</td>
+            <td>Description</td>
+            <td>Status</td>
+        </tr>
+        <tr th:each="slotReservation: ${availableSlots}">
+            <td th:text="${slotReservation.id}">Slot ID</td>
+            <td th:text="${slotReservation.description}">Description</td>
+            <td th:text="${slotReservation.status}">Status</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

@@ -1,7 +1,6 @@
-package com.parking_project.parking.entity;
+package com.parking_project.parking.data.entity;
 
 // Not sure if that's the right import - I totally might be using wrong annotations
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

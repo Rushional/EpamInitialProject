@@ -1,6 +1,6 @@
-package com.parking_project.parking.repositoty;
+package com.parking_project.parking.data.repositoty;
 
-import com.parking_project.parking.entity.Customer;
+import com.parking_project.parking.data.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

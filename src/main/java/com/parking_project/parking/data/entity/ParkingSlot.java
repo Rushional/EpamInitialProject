@@ -1,4 +1,4 @@
-package com.parking_project.parking.entity;
+package com.parking_project.parking.data.entity;
 
 
 import lombok.Getter;
