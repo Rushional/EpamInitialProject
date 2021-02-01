@@ -8,17 +8,26 @@
 </head>
 <body>
     <h1>Registration</h1>
+    <div class="container">
+
     <form method="post">
-        <label for="fullName">FullName</label>
-        <input type="text" name="fullName" id="fullName" placeholder="name_surname"/>
-        <br>
-        <label for="phoneNumber">PhoneNumber</label>
-        <input id="phoneNumber" name="phoneNumber" type="text" placeholder="enter your phone number"/>
-        <br>
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" placeholder="enter your password">
-        <br>
-        <input type="submit" value="sign up"/>
+        <div>
+            <label for="fullName">FullName: </label>
+            <input type="text" name="fullName" id="fullName" placeholder="name_surname"/>
+        </div>
+        <div>
+            <label for="phoneNumber">PhoneNumber: </label>
+            <input id="phoneNumber" class="from-control" name="phoneNumber" type="text" placeholder="enter your phone number"/>
+        </div>
+        <div>
+            <label for="password">Password: </label>
+            <input id="password" name="password" type="password" placeholder="enter your password">
+        </div>
+        <div>
+            <input type="submit" value="sign up"/>
+        </div>
     </form>
+
+    </div>
 </body>
 </html>
