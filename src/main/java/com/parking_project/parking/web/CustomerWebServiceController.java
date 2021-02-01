@@ -27,7 +27,7 @@ public class CustomerWebServiceController {
         return customerService.getAllCustomers();
     }
 
-    @PostMapping("/customer")
+    @PutMapping("/customer")
     public ResponseEntity<Void> addCustomer(@RequestBody Customer customer, UriComponentsBuilder builder) {
         customerService.addCustomer(customer);
         HttpHeaders headers = new HttpHeaders();
@@ -35,7 +35,7 @@ public class CustomerWebServiceController {
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
 
-    @PutMapping("/customer")
+    @PostMapping("/customer")
     public ResponseEntity<Customer> updateCustomer(@RequestBody Customer customer) {
         customerService.updateCustomer(customer);
         return new ResponseEntity<Customer>(customer, HttpStatus.OK);
