@@ -36,4 +36,5 @@ public class Reservation {
 
     @Column(name = "end_time", nullable = false)
     private Date endDate;
+
 }
