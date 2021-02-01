@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("api/availableSlots")
 public class ParkingSlotWebServiceController {
     private final BookingService bookingService;
@@ -22,7 +22,6 @@ public class ParkingSlotWebServiceController {
     }
     @GetMapping
     public List<ParkingSlot> getAllSlots() {
-        List<ParkingSlot> availableSlots = this.bookingService.getAvailableSlots();
-        return availableSlots;
+        return this.bookingService.getAvailableSlots();
     }
 }
