@@ -23,17 +23,9 @@ public class ParkingSlot {
     @Column(name = "description", length = 2048, nullable = true, unique = false)
     private String description;
 
-    public String getDescription() {
-        return description;
-    }
-
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private StatusType status;
-
-    public StatusType getStatus() {
-        return status;
-    }
 
     @OneToMany(mappedBy="parkingSlot")
     private List<Reservation> reservations = new ArrayList<>();

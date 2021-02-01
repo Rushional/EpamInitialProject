@@ -22,10 +22,6 @@ public class UserRole {
     @Column(name = "role_name", length = 32, nullable = false, unique = true)
     private String roleName;
 
-    public String getRoleName() {
-        return roleName;
-    }
-
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private List<Customer> customers = new ArrayList<>();
 }

@@ -21,9 +21,8 @@ public class ParkingSlotWebServiceController {
         this.bookingService = bookingService;
     }
     @GetMapping
-    public  String getAllSlots(Model model) {
+    public List<ParkingSlot> getAllSlots() {
         List<ParkingSlot> availableSlots = this.bookingService.getAvailableSlots();
-        model.addAttribute("availableSlots", availableSlots);
-        return "availableSlots";
+        return availableSlots;
     }
 }
