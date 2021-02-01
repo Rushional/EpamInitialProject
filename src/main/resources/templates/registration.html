@@ -7,10 +7,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 </head>
 <body>
+<div class="container">
     <h1>Registration</h1>
-    <div class="container">
-
-    <form method="post">
+    <form th:method="post">
         <div>
             <label for="fullName">FullName: </label>
             <input type="text" name="fullName" id="fullName" placeholder="name_surname"/>
@@ -24,7 +23,8 @@
             <input id="password" name="password" type="password" placeholder="enter your password">
         </div>
         <div>
-            <input type="submit" value="sign up"/>
+            <input type="submit" class="btn btn-primary" value="sign up"/>
+            <a type="button" class="btn btn-primary" href="login">sign in</a>
         </div>
     </form>
 

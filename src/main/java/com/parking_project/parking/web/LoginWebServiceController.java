@@ -9,24 +9,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("api/registration")
-public class RegistrationWebServiceController {
+@RequestMapping("api/login")
+public class LoginWebServiceController {
 
     private final CustomerService customerService;
 
-    public RegistrationWebServiceController(CustomerService customerService) {
+    public LoginWebServiceController(CustomerService customerService) {
         this.customerService = customerService;
     }
 
     @GetMapping
-    public String registration() {
-        return "registration";
+    public String login() {
+        return "login";
     }
 
     @PostMapping
-    public String registration(@RequestParam String fullName, @RequestParam String phoneNumber, @RequestParam String password) {
-        Customer customer = new Customer(fullName, phoneNumber, password);
-        customerService.addCustomer(customer);
-        return "redirect:availableSlots";
+    public String login(@RequestParam String fullName, @RequestParam String password) {
+        Customer customer = customerService.getCustomerByFullName(fullName);
+        if (customer != null && customer.getPassword().equals(password)){
+                return "redirect:availableSlots";
+        }
+        return "login";
     }
 }

@@ -43,6 +43,8 @@ public class CustomerService {
         return customerRepository.findAllByOrderById();
     }
 
-
+    public Customer getCustomerByFullName(String fullName) {
+        return customerRepository.findByFullName(fullName);
+    }
 
 }
