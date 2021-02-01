@@ -33,14 +33,6 @@ public class Customer {
     @Column(name = "phone_number", length = 16, nullable = false, unique = false)
     private String phoneNumber;
 
-    public String getFullName() {
-        return fullName;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
     @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
     @JoinTable(
             name = "customer_car",

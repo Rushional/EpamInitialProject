@@ -31,10 +31,6 @@ public class ParkingSlot {
     @Column(name = "status")
     private StatusType status;
 
-    public StatusType getStatus() {
-        return status;
-    }
-
     @OneToMany(mappedBy="parkingSlot")
     private List<Reservation> reservations = new ArrayList<>();
 }

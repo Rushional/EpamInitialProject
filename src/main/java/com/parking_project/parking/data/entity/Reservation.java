@@ -34,14 +34,6 @@ public class Reservation {
     @Column(name = "start_time", nullable = false)
     private Date startDate;
 
-    public Date getStartDate() {
-        return startDate;
-    }
-
     @Column(name = "end_time", nullable = false)
     private Date endDate;
-
-    public Date getEndDate() {
-        return endDate;
-    }
 }
