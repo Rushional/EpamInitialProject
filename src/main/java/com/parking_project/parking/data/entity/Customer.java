@@ -33,6 +33,9 @@ public class Customer {
     @Column(name = "phone_number", length = 16, nullable = false, unique = false)
     private String phoneNumber;
 
+    @Column(name = "password", length = 32, nullable = false)
+    private String password;
+
     @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
     @JoinTable(
             name = "customer_car",
