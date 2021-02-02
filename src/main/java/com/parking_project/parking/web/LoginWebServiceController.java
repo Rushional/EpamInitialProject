@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("api/login")
+@RequestMapping("login")
 public class LoginWebServiceController {
 
     private final CustomerService customerService;
@@ -27,7 +27,7 @@ public class LoginWebServiceController {
     public String login(@RequestParam String fullName, @RequestParam String password) {
         Customer customer = customerService.getCustomerByFullName(fullName);
         if (customer != null && customer.getPassword().equals(password)){
-                return "redirect:availableSlots";
+                return "redirect:api/availableSlots";
         }
         return "login";
     }
