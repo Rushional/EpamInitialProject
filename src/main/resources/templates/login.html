@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 </head>
 <body>
 <div class="container">
     <h1> log in page</h1>
-    <form method="post" action="@{/login}">
+    <form method="post">
         <div>
-            <label for="fullName">FullName:</label>
-            <input id="fullName" name="fullName" type="text" placeholder="name_surname"/>
+            <label for="username">FullName:</label>
+            <input id="username" name="username" type="text" placeholder="name_surname"/>
         </div>
         <div>
             <label for="password">Password: </label>
             <input id="password" name="password" type="password" placeholder="enter your password"/>
         </div>
-        <input type="submit" class="btn btn-primary" value="sign in"/>
+        <input type="submit" name="submit" class="btn btn-primary" value="sign in"/>
         <a type="button" class="btn btn-primary" href="registration">sign up</a>
     </form>
 
 </div>
 </body>
 </html>
+

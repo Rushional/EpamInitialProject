@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/home")
+@PreAuthorize(value = "hasAuthority('USER')")
 public class HomeController {
 
     private final CustomerService customerService;
@@ -20,7 +21,7 @@ public class HomeController {
     }
 
     @GetMapping
-    @PreAuthorize(value = "hasAuthority('USER') or hasAuthority('ADMIN')")
+    @PreAuthorize(value = "hasAuthority('USER')")
     public String home(@AuthenticationPrincipal Customer customer, Model model) {
         if (customer != null) {
             model.addAttribute("customer", customer.getFullName());

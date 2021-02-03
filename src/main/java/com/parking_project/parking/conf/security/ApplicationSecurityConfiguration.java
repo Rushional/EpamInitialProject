@@ -25,11 +25,12 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers(  "/home","/login", "/registration", "/static/**").permitAll()
+                .antMatchers(  "/registration", "/static/**").permitAll()
                 .anyRequest().authenticated()
             .and()
                 .formLogin()
-                .loginPage("/login")
+                .loginPage("/login").defaultSuccessUrl("/api/customer")
+                .permitAll()
             .and()
                 .logout()
                 .permitAll();
