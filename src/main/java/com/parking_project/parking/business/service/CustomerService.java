@@ -1,23 +1,32 @@
 package com.parking_project.parking.business.service;
 
 import com.parking_project.parking.data.entity.Customer;
+import com.parking_project.parking.data.entity.Role;
 import com.parking_project.parking.data.repositoty.CustomerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CustomerService {
+public class CustomerService implements UserDetailsService {
     private final CustomerRepository customerRepository;
 
-    @Autowired
-    public CustomerService(CustomerRepository customerRepository) {
+    private final PasswordEncoder passwordEncoder;
+
+    public CustomerService(CustomerRepository customerRepository, PasswordEncoder passwordEncoder) {
         this.customerRepository = customerRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public void addCustomer(Customer customer){
+        customer.setRoles(Collections.singleton(Role.USER));
+        customer.setPassword(passwordEncoder.encode(customer.getPassword()));
         customerRepository.save(customer);
         customerRepository.flush();
     }
@@ -47,4 +56,9 @@ public class CustomerService {
         return customerRepository.findByFullName(fullName);
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String fullName) throws UsernameNotFoundException {
+        return customerRepository.findByFullName(fullName);
+
+    }
 }

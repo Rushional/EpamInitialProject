@@ -3,6 +3,7 @@ package com.parking_project.parking.web;
 import com.parking_project.parking.business.service.BookingService;
 import com.parking_project.parking.data.entity.ParkingSlot;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

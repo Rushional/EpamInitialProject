@@ -3,37 +3,30 @@ package com.parking_project.parking.data.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "customer")
 @NoArgsConstructor
 @Setter
 @Getter
-public class Customer {
+public class Customer implements UserDetails {
     @Id
-    @Column(name = "customer_id")
     @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name = "customer_id")
     private Long id;
 
-/*
-* I don't think we need separate columns for first and last names, so I only made the one.
-* Also, I decided not to add a date of birth. I want to have as little info in the database as possible.
-*
-* I wanted to add @NotNull and @NotEmpty, but my IntelliJ didn't recognize these annotations.
-* Either I don't have some dependencies or we don't need these annotations. I don't know.
-* If this is a problem, than it applies to the other Entities as well.
-*/
-    @Column(name = "full_name", length = 128, nullable = false, unique = false)
+    @Column(name = "full_name", length = 128, nullable = false)
     private String fullName;
 
-    @Column(name = "phone_number", length = 16, nullable = false, unique = false)
+    @Column(name = "phone_number", length = 16, nullable = false)
     private String phoneNumber;
 
-    @Column(name = "password", length = 32, nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
@@ -42,22 +35,49 @@ public class Customer {
             joinColumns = { @JoinColumn(name = "customer_id")},
             inverseJoinColumns = { @JoinColumn(name = "license_plate") }
     )
-    List<Car> cars = new ArrayList<>();
+    List<Car> cars;
 
-    @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "customer_role",
-            joinColumns = { @JoinColumn(name = "customer_id")},
-            inverseJoinColumns = { @JoinColumn(name = "role_id") }
-    )
-    List<Car> roles = new ArrayList<>();
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "customer_id"))
+    @Enumerated(EnumType.STRING)
+    Set<Role> roles;
 
     @OneToMany(mappedBy="customer")
-    private List<Reservation> reservations = new ArrayList<>();
+    private List<Reservation> reservations;
 
     public Customer(String fullName, String phoneNumber, String password) {
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.password = password;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getRoles();
+    }
+
+    @Override
+    public String getUsername() {
+        return getFullName();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

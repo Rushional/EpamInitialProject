@@ -28,7 +28,7 @@ public class Reservation {
     private Car car;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @Column(name = "start_time", nullable = false)

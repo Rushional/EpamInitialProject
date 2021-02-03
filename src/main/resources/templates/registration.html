@@ -9,7 +9,7 @@
 <body>
 <div class="container">
     <h1>Registration</h1>
-    <form th:method="post">
+    <form method="post" th:action="@{/registration}">
         <div>
             <label for="fullName">FullName: </label>
             <input type="text" name="fullName" id="fullName" placeholder="name_surname"/>
