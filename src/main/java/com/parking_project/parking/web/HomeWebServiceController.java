@@ -7,27 +7,29 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/home")
 @PreAuthorize(value = "hasAuthority('USER')")
-public class HomeController {
+public class HomeWebServiceController {
 
     private final CustomerService customerService;
 
-    public HomeController(CustomerService customerService) {
+    public HomeWebServiceController(CustomerService customerService) {
         this.customerService = customerService;
     }
 
-    @GetMapping
-    @PreAuthorize(value = "hasAuthority('USER')")
+    @GetMapping("/home")
     public String home(@AuthenticationPrincipal Customer customer, Model model) {
         if (customer != null) {
             model.addAttribute("customer", customer.getFullName());
+            model.addAttribute("role", customer.getRoles());
             return "home";
         }
         model.addAttribute("customer", "anonymous");
         return "home";
+    }
+    @GetMapping("/")
+    public String toCustomer() {
+        return "redirect:/home";
     }
 }

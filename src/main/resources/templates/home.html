@@ -5,7 +5,8 @@
     <title>Title</title>
 </head>
 <body>
-    <h1 th:text="${customer}"> log in page</h1>
+    <h1 th:text="${customer}"> </h1>
+    <h2 th:text="${role}"> </h2>
     <form th:if="${customer != anonymous}" method="post" th:action="@{/logout}">
         <input type="submit" value="logout"/>
     </form>
