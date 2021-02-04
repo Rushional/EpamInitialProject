@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface CarRepository extends JpaRepository<Car, String> {
-
+public interface CustomerCarRepository extends JpaRepository<Car, String> {
+    @Query("SELECT u FROM Customer u LEFT JOIN FETCH u.cars WHERE :car member u.cars")
+    List<Customer> findCustomersByCar(Car car);
 }

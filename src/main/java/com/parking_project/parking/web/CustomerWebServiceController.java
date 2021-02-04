@@ -1,6 +1,8 @@
 package com.parking_project.parking.web;
 
+import com.parking_project.parking.business.service.CarService;
 import com.parking_project.parking.business.service.CustomerService;
+import com.parking_project.parking.data.entity.Car;
 import com.parking_project.parking.data.entity.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -16,10 +18,12 @@ import java.util.List;
 public class CustomerWebServiceController {
 
     private final CustomerService customerService;
+    public final CarService carService;
 
     @Autowired
-    public CustomerWebServiceController(CustomerService customerService) {
+    public CustomerWebServiceController(CustomerService customerService, CarService carService) {
         this.customerService = customerService;
+        this.carService = carService;
     }
 
     @GetMapping("/customer")
@@ -40,4 +44,9 @@ public class CustomerWebServiceController {
         customerService.updateCustomer(customer);
         return new ResponseEntity<Customer>(customer, HttpStatus.OK);
     }
+
+    @GetMapping("find")
+    public List<Customer> getCustomersByCar(@RequestParam String id) {
+        return customerService.getCustomersByCar(id);}
+
 }

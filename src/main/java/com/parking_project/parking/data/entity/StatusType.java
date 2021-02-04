@@ -2,5 +2,5 @@
 package com.parking_project.parking.data.entity;
 
 public enum StatusType {
-    OCCUPIED, FREE
+    ACTIVE, DISABLED
 }

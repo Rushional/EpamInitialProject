@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("api/registration")
+@RequestMapping("registration")
 public class RegistrationWebServiceController {
 
     private final CustomerService customerService;
@@ -27,6 +27,6 @@ public class RegistrationWebServiceController {
     public String registration(@RequestParam String fullName, @RequestParam String phoneNumber, @RequestParam String password) {
         Customer customer = new Customer(fullName, phoneNumber, password);
         customerService.addCustomer(customer);
-        return "redirect:availableSlots";
+        return "redirect:api/availableSlots";
     }
 }

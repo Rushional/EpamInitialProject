@@ -24,6 +24,10 @@ public class Car {
     @Column(name = "license_plate", length = 16, nullable = false, unique = true)
     private String licensePlate;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private StatusType status;
+
     @ManyToMany(mappedBy = "cars", fetch = FetchType.LAZY)
     private List<Customer> customers = new ArrayList<>();
 
