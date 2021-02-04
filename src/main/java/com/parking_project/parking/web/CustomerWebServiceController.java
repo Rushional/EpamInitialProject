@@ -14,7 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/customer")
 public class CustomerWebServiceController {
 
     private final CustomerService customerService;
@@ -26,12 +26,12 @@ public class CustomerWebServiceController {
         this.carService = carService;
     }
 
-    @GetMapping("/customer")
+    @GetMapping()
     public List<Customer> getAllCustomers() {
         return customerService.getAllCustomers();
     }
 
-    @PostMapping("/customer")
+    @PostMapping()
     public ResponseEntity<Void> addCustomer(@RequestBody Customer customer, UriComponentsBuilder builder) {
         customerService.addCustomer(customer);
         HttpHeaders headers = new HttpHeaders();
@@ -39,13 +39,13 @@ public class CustomerWebServiceController {
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
 
-    @PutMapping("/customer")
+    @PutMapping()
     public ResponseEntity<Customer> updateCustomer(@RequestBody Customer customer) {
         customerService.updateCustomer(customer);
         return new ResponseEntity<Customer>(customer, HttpStatus.OK);
     }
 
-    @GetMapping("find")
+    @GetMapping("/find")
     public List<Customer> getCustomersByCar(@RequestParam String id) {
         return customerService.getCustomersByCar(id);}
 

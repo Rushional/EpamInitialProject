@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
-    List<Reservation> findReservationsByStartDateAndEndDate(Date startTime, Date endTime);
+    List<Reservation> findReservationsByStartDateGreaterThanEqualAndEndDateLessThanEqual(Date startTime, Date endTime);
     List<Reservation> findReservationsByCustomerId(Long id);
 
 }

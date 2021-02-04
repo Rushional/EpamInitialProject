@@ -17,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -51,12 +52,19 @@ public class BookingWebController {
     }
 
     @GetMapping("/date")
-    public ResponseEntity<List<Reservation>> getAvailableReservationsByDate(@RequestParam String date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-        LocalDateTime localDate = LocalDateTime.from(formatter.parse(date));
-        Date parseDate = Date.from(Instant.from(localDate));
+    public List<Reservation> getAvailableReservationsByDate(@RequestParam String date) {
+        LocalDateTime localDateTime = LocalDateTime.parse(date);
+        Date parseDate = Date.from(localDateTime.atZone(ZoneOffset.UTC).toInstant());
         List<Reservation> reservations = bookingService.getAvailableSlotsByDate(parseDate);
 
-        return new ResponseEntity<>(reservations, HttpStatus.OK);
+        return reservations;
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> createReservation(@RequestParam String slotId, @RequestParam String customerId,
+                                                  @RequestParam String carId, @RequestParam String startDate,
+                                                  @RequestParam String endDate) {
+        bookingService.createReservation(slotId, customerId, carId, startDate, endDate);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

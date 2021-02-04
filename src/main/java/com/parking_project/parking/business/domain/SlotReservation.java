@@ -1,6 +1,9 @@
 package com.parking_project.parking.business.domain;
 
 
+import com.parking_project.parking.data.entity.StatusType;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class SlotReservation {
@@ -66,5 +69,18 @@ public class SlotReservation {
 
     public void setEnd(Date end) {
         this.end = end;
+    }
+
+    @Override
+    public String toString() {
+        return "SlotReservation{" +
+                "slotId=" + slotId +
+                ", carId=" + carId +
+                ", customer_id=" + customer_id +
+                ", description='" + description + '\'' +
+                ", customerName='" + customerName + '\'' +
+                ", start=" + LocalDateTime.from(start.toInstant()) +
+                ", end=" + end +
+                '}';
     }
 }

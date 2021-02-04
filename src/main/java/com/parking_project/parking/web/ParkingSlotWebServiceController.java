@@ -6,6 +6,7 @@ import com.parking_project.parking.business.service.ParkingSlotService;
 import com.parking_project.parking.data.entity.Customer;
 import com.parking_project.parking.data.entity.ParkingSlot;
 import com.parking_project.parking.data.entity.Reservation;
+import com.parking_project.parking.data.entity.StatusType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("api/parking")
 public class ParkingSlotWebServiceController {
     private final ParkingSlotService parkingSlotService;
     private final BookingService bookingService;
@@ -35,19 +36,16 @@ public class ParkingSlotWebServiceController {
         return this.bookingService.getAvailableSlotsByDate(Date.from(Instant.now()));
     }
 
-    @GetMapping("addParking")
-    public List<Reservation> getAllSlots() {
-        return this.bookingService.getAvailableSlotsByDate(Date.from(Instant.now()));
+    @GetMapping()
+    public List<ParkingSlot> getAllSlots() {
+        return this.parkingSlotService.getAllSlots();
     }
 
     @PostMapping("addParking")
-    public ResponseEntity<Void> addParkingSlot(@RequestBody String description, UriComponentsBuilder builder) {
-        ParkingSlot parkingSlot = new ParkingSlot();
-        parkingSlot.setDescription(description);
-        parkingSlotService.addParkingSlot(parkingSlot);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path("/api/addParking/{id}").buildAndExpand(parkingSlot.getId()).toUri());
-        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+    public ResponseEntity<Void> addParkingSlot(@RequestParam String description, UriComponentsBuilder builder) {
+
+        parkingSlotService.addParkingSlot(description);
+        return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("{id}")
