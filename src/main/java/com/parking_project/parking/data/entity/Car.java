@@ -30,9 +30,9 @@ public class Car {
 
     @ManyToMany(mappedBy = "cars", fetch = FetchType.LAZY)
     private List<Customer> customers = new ArrayList<>();
-
-    @OneToMany(mappedBy="car")
-    private List<Reservation> reservations = new ArrayList<>();
+//recursion problem
+//    @OneToMany(mappedBy="car")
+//    private List<Reservation> reservations = new ArrayList<>();
 
 //    TODO: do we need equals and hashCode?
 

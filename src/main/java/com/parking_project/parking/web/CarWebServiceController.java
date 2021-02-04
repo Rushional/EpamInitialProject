@@ -24,7 +24,7 @@ public class CarWebServiceController {
         this.customerService = customerService;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/car/{id}")
     public ResponseEntity<Car> getCarById(@PathVariable("id") String id) {
         Car car = carService.getCarById(id);
         return new ResponseEntity<Car>(car, HttpStatus.OK);
@@ -51,8 +51,8 @@ public class CarWebServiceController {
         return new ResponseEntity<>(headers, HttpStatus.OK);
     }
 
-    @GetMapping("find/{id}")
-    public List<Car> getCarsByCustomers(@PathVariable("id") String id) {
+    @GetMapping("{id}")
+    public List<Car> getCarsByCustomer(@PathVariable("id") String id) {
         return carService.getCarsByCustomers(id);
     }
 
