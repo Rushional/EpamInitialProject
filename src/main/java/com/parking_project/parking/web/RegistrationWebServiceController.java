@@ -26,7 +26,7 @@ public class RegistrationWebServiceController {
     public String registration(@RequestParam String fullName, @RequestParam String phoneNumber, @RequestParam String password) {
         Customer customer = new Customer(fullName, phoneNumber, password);
         customerService.addCustomer(customer);
-        return "redirect:api/availableSlots";
+        return "redirect:/login";
     }
 
     @GetMapping("/login")
