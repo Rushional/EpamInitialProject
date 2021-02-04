@@ -38,7 +38,10 @@ public class ParkingSlotService {
                .orElseThrow(() -> new RuntimeException("Slot is missing from the database"));
     }
 
-    public void addParkingSlot(ParkingSlot parkingSlot) {
+    public void addParkingSlot(String description) {
+        ParkingSlot parkingSlot = new ParkingSlot();
+        parkingSlot.setDescription(description);
+        parkingSlot.setStatus(StatusType.ACTIVE);
         parkingSlotRepository.save(parkingSlot);
         parkingSlotRepository.flush();
     }
