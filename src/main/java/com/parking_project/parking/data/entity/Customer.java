@@ -16,33 +16,27 @@ import java.util.*;
 @Getter
 public class Customer implements UserDetails {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "customer_id")
     private Long id;
-
     @Column(name = "full_name", length = 128, nullable = false)
     private String fullName;
-
     @Column(name = "phone_number", length = 16, nullable = false)
     private String phoneNumber;
-
     @Column(name = "password", nullable = false)
     private String password;
-
-    @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "customer_car",
-            joinColumns = { @JoinColumn(name = "customer_id")},
-            inverseJoinColumns = { @JoinColumn(name = "license_plate") }
+            joinColumns = {@JoinColumn(name = "customer_id")},
+            inverseJoinColumns = {@JoinColumn(name = "license_plate")}
     )
     List<Car> cars;
-
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "customer_id"))
     @Enumerated(EnumType.STRING)
     Set<Role> roles;
-
-    @OneToMany(mappedBy="customer")
+    @OneToMany(mappedBy = "customer")
     private List<Reservation> reservations;
 
     public Customer(String fullName, String phoneNumber, String password) {
