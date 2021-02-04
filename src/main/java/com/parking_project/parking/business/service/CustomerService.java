@@ -39,7 +39,8 @@ public class CustomerService {
         tmpCustomer.setCars(tmpCustomer.getCars());
         tmpCustomer.setFullName(customer.getFullName());
         tmpCustomer.setPhoneNumber(customer.getPhoneNumber());
-        tmpCustomer.setReservations(customer.getReservations());
+        //recursion problem
+//        tmpCustomer.setReservations(customer.getReservations());
         tmpCustomer.setPassword(customer.getPassword());
 
         customerRepository.save(tmpCustomer);

@@ -41,7 +41,6 @@ public class CarService {
         Car tmpCar = getCarById(car.getLicensePlate());
         tmpCar.setLicensePlate(car.getLicensePlate());
         tmpCar.setCustomers(car.getCustomers());
-        tmpCar.setReservations(car.getReservations());
         tmpCar.setStatus(car.getStatus());
 
         carRepository.flush();

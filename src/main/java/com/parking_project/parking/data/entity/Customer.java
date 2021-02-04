@@ -36,8 +36,10 @@ public class Customer implements UserDetails {
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "customer_id"))
     @Enumerated(EnumType.STRING)
     Set<Role> roles;
-    @OneToMany(mappedBy = "customer")
-    private List<Reservation> reservations;
+
+    //recursion problem
+//    @OneToMany(mappedBy = "customer")
+//    private List<Reservation> reservations;
 
     public Customer(String fullName, String phoneNumber, String password) {
         this.fullName = fullName;
