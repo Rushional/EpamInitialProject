@@ -14,10 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -53,8 +50,8 @@ public class BookingWebController {
 
     @GetMapping("/date")
     public List<Reservation> getAvailableReservationsByDate(@RequestParam String date) {
-        LocalDateTime localDateTime = LocalDateTime.parse(date);
-        Date parseDate = Date.from(localDateTime.atZone(ZoneOffset.UTC).toInstant());
+        LocalDateTime localDateTime = LocalDateTime.parse(date).atZone(ZoneOffset.systemDefault()).toLocalDateTime();
+        Date parseDate = Date.from(localDateTime.atZone(ZoneOffset.systemDefault()).toInstant());
         List<Reservation> reservations = bookingService.getAvailableSlotsByDate(parseDate);
 
         return reservations;

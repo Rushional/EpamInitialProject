@@ -51,8 +51,8 @@ public class CarWebServiceController {
         return new ResponseEntity<>(headers, HttpStatus.OK);
     }
 
-    @GetMapping("{id}")
-    public List<Car> getCarsByCustomer(@PathVariable("id") String id) {
+    @GetMapping("/find")
+    public List<Car> getCarsByCustomer(@RequestParam String id) {
         return carService.getCarsByCustomers(id);
     }
 
