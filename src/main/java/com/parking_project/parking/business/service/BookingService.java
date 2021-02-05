@@ -101,7 +101,6 @@ public class BookingService {
     }
 
     private void fillEndReservationsDate(Map<Long, List<SlotReservation>> reservations, Date date) {
-        System.out.println("fillEndReservationDate");
         Date endDate = getEndOfDay(date);
         for (List<SlotReservation> list : reservations.values()) {
             list.forEach(slotReservation -> {
@@ -116,7 +115,6 @@ public class BookingService {
     }
 
     public Date findNextReservationDate(Iterable<Reservation> reservations, Reservation reservation, Date date) {
-        System.out.println("fillNextReservationDates");
         Date firstEndTime = Date.from(reservation.getEndDate().toInstant());
         for (Reservation currentReservation : reservations) {
             if (!currentReservation.getParkingSlot().equals(reservation.getParkingSlot())) {
@@ -137,7 +135,6 @@ public class BookingService {
     }
 
     public void fillFirstReservationDates(Iterable<Reservation> reservations, Map<Long, List<SlotReservation>> reservationsMap, Date date) {
-        System.out.println("fillFirstReservationDates");
         for (Long slotId : reservationsMap.keySet()) {
             Date first = null;
             for (Reservation reservation : reservations) {
@@ -169,17 +166,14 @@ public class BookingService {
     }
 
     public List<Reservation> getReservationsByCustomer(Customer customer) {
-        System.out.println("getReservationsByCustomer");
         return reservationRepository.findReservationsByCustomerId(customer.getId());
     }
 
     public List<Reservation> getAllReservations() {
-        System.out.println("getAllreservations");
         return reservationRepository.findAll();
     }
 
     public Iterable<Reservation> getReservationsByDate(Date date) {
-        System.out.println("getReservationsByDate");
         LocalDateTime localDateTime = date.toInstant().atZone(ZoneOffset.systemDefault()).toLocalDateTime();
         Instant instant = localDateTime.atZone(ZoneOffset.systemDefault()).toInstant();
         Instant startInstant = instant.minus(Duration.ofHours(24));
@@ -210,15 +204,22 @@ public class BookingService {
         return resultDate;
     }
 
-    public void createReservation(String slotId, String customerId, String carId, String startDate, String endDate) {
-        System.out.println("createReservation");
-        ParkingSlot parkingSlot = parkingSlotRepository.findById(Long.valueOf(slotId)).orElseThrow();
-        Customer customer = customerRepository.findCustomerById(Long.valueOf(customerId));
-        Car car = carRepository.findById(carId).orElseThrow();
+    public boolean createReservation(String slotId, String customerId, String carId, String startDate, String endDate) {
         LocalDateTime startLocalDateTime = LocalDateTime.parse(startDate);
         Date start = Date.from(startLocalDateTime.atZone(ZoneOffset.UTC).toInstant());
         LocalDateTime endLocalDateTime = LocalDateTime.parse(endDate);
         Date end = Date.from(endLocalDateTime.atZone(ZoneOffset.UTC).toInstant());
+
+        if(start.equals(end) || start.after(end) || startLocalDateTime.plusDays(1).isBefore(endLocalDateTime)) {
+            return false;
+        }
+
+        if (!isFreeSlot(slotId, start, end)) {
+            return false;
+        }
+        ParkingSlot parkingSlot = parkingSlotRepository.findById(Long.valueOf(slotId)).orElseThrow();
+        Customer customer = customerRepository.findCustomerById(Long.valueOf(customerId));
+        Car car = carRepository.findById(carId).orElseThrow();
 
         Reservation reservation = new Reservation();
         reservation.setCustomer(customer);
@@ -229,5 +230,22 @@ public class BookingService {
 
         reservationRepository.save(reservation);
         reservationRepository.flush();
+        return true;
+    }
+
+    private boolean isFreeSlot(String slotId, Date startDate, Date endDate) {
+        Date start = Date.from(startDate.toInstant());
+        Date end = Date.from(endDate.toInstant());
+        java.sql.Date sqlStart = new java.sql.Date(start.getTime());
+        java.sql.Date sqlEnd = new java.sql.Date(end.getTime());
+        List<Reservation> reservations = new ArrayList<>(this.reservationRepository.findReservationsByStartDateGreaterThanEqualAndStartDateLessThanEqual(sqlStart, sqlEnd));
+        List<Reservation> slotReservations = new ArrayList<>();
+        reservations.forEach(reservation -> {
+            if (reservation.getParkingSlot().getId().equals(Long.valueOf(slotId))) {
+                slotReservations.add(reservation);
+            }
+        });
+
+        return slotReservations.isEmpty();
     }
 }

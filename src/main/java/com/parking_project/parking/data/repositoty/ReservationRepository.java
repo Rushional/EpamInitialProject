@@ -11,5 +11,7 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     List<Reservation> findReservationsByStartDateGreaterThanEqualAndEndDateLessThanEqual(Date startTime, Date endTime);
     List<Reservation> findReservationsByCustomerId(Long id);
+    List<Reservation> findReservationsByStartDateGreaterThanEqualAndStartDateLessThanEqual(Date startTime, Date endTime);
+    List<Reservation> findReservationsByEndDateGreaterThanEqualAndEndDateLessThanEqual(Date startTime, Date endTime);
 
 }
