@@ -1,6 +1,5 @@
 package com.parking_project.parking.web;
 
-import com.parking_project.parking.business.domain.SlotReservation;
 import com.parking_project.parking.business.service.BookingService;
 import com.parking_project.parking.business.service.CarService;
 import com.parking_project.parking.business.service.CustomerService;
@@ -8,15 +7,14 @@ import com.parking_project.parking.business.service.ParkingSlotService;
 import com.parking_project.parking.data.entity.Customer;
 import com.parking_project.parking.data.entity.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/booking")
@@ -61,7 +59,9 @@ public class BookingWebController {
     public ResponseEntity<Void> createReservation(@RequestParam String slotId, @RequestParam String customerId,
                                                   @RequestParam String carId, @RequestParam String startDate,
                                                   @RequestParam String endDate) {
-        bookingService.createReservation(slotId, customerId, carId, startDate, endDate);
-        return new ResponseEntity<>(HttpStatus.OK);
+
+        return  bookingService.createReservation(slotId, customerId, carId, startDate, endDate)
+                ? new ResponseEntity<>(HttpStatus.CREATED)
+                : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }
