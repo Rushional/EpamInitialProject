@@ -53,24 +53,20 @@ public class BookingService {
     private void fillReservationsMapByDate(Map<Long, List<SlotReservation>> reservationSlotsMap, Date date) {
         Iterable<Reservation> reservations = getReservationsByDate(date);
         System.out.println(reservations);
-        LocalDateTime localDateTime = date.toInstant().atZone(ZoneOffset.UTC).toLocalDateTime();
-        Instant instant = localDateTime.toInstant(ZoneOffset.UTC);
-        Date nextDay = Date.from(instant.plus(Period.ofDays(1)));
         Iterator<Reservation> iterator = reservations.iterator();
         while (iterator.hasNext()) {
             Reservation reservation = iterator.next();
-            if (reservation.getEndDate().before(date) || reservation.getStartDate().after(nextDay)) {
+            if (!isAvailableTime(reservation, date)) {
                 continue;
             }
             Date durationEnd = findNextReservationDate(reservations, reservation, date);
 
-            if (!reservation.getEndDate().equals(durationEnd)) {
+            if ((!reservation.getEndDate().equals(durationEnd)) && reservation.getEndDate().before(durationEnd)) {
                 SlotReservation slotReservation = new SlotReservation();
                 slotReservation.setSlotId(reservation.getParkingSlot().getId());
                 slotReservation.setDescription(reservation.getParkingSlot().getDescription());
                 slotReservation.setStart(reservation.getEndDate());
                 slotReservation.setEnd(durationEnd);
-
 
                 List<SlotReservation> currentSlot = reservationSlotsMap.get(reservation.getParkingSlot().getId());
                 currentSlot.add(slotReservation);
@@ -81,6 +77,29 @@ public class BookingService {
 
     }
 
+    private boolean isAvailableTime(Reservation reservation, Date date) {
+        Instant instant = date.toInstant();
+        Date nextDay = Date.from(instant.plus(Period.ofDays(1)));
+        Date resStart = Date.from(reservation.getStartDate().toInstant());
+        Date resEnd = Date.from(reservation.getEndDate().toInstant());
+        Date start = getStartOfDay(date);
+        Date end = getEndOfDay(date);
+
+        if (resStart.equals(resEnd)) {
+            return false;
+        }
+        if ((resStart.equals(start) || resStart.before(start)) && (resEnd.equals(end) || resEnd.after(end))) {
+            return false;
+        }
+        if (resEnd.before(start)) {
+            return false;
+        }
+        if (resStart.after(nextDay)) {
+            return false;
+        }
+        return true;
+    }
+
     private void fillEndReservationsDate(Map<Long, List<SlotReservation>> reservations, Date date) {
         System.out.println("fillEndReservationDate");
         Date endDate = getEndOfDay(date);
@@ -89,13 +108,16 @@ public class BookingService {
                 if (null == slotReservation.getEnd()) {
                     slotReservation.setEnd(endDate);
                 }
+                if (slotReservation.getEnd().after(getEndOfDay(date))) {
+                    slotReservation.setEnd(getEndOfDay(date));
+                }
             });
         }
     }
 
     public Date findNextReservationDate(Iterable<Reservation> reservations, Reservation reservation, Date date) {
         System.out.println("fillNextReservationDates");
-        Date firstEndTime = reservation.getEndDate();
+        Date firstEndTime = Date.from(reservation.getEndDate().toInstant());
         for (Reservation currentReservation : reservations) {
             if (!currentReservation.getParkingSlot().equals(reservation.getParkingSlot())) {
                 continue;
@@ -121,10 +143,10 @@ public class BookingService {
             for (Reservation reservation : reservations) {
                 if (reservation.getParkingSlot().getId().equals(slotId)) {
                     if (null == first && reservation.getEndDate().after(date)) {
-                        first = reservation.getStartDate();
+                        first = Date.from(reservation.getStartDate().toInstant());
                     }
-                    if (first.after(reservation.getStartDate())) {
-                        first = reservation.getStartDate();
+                    if (null != first && first.after(reservation.getStartDate())) {
+                        first = Date.from(reservation.getStartDate().toInstant());
                     }
                 }
             }
@@ -136,6 +158,9 @@ public class BookingService {
                 first = getStartOfDay(date);
                 slotReservation.setStart(first);
             } else {
+                if (first.equals(getStartOfDay(date))) {
+                    continue;
+                }
                 slotReservation.setStart(getStartOfDay(date));
                 slotReservation.setEnd(first);
             }
@@ -155,8 +180,8 @@ public class BookingService {
 
     public Iterable<Reservation> getReservationsByDate(Date date) {
         System.out.println("getReservationsByDate");
-        LocalDateTime localDateTime = date.toInstant().atZone(ZoneOffset.UTC).toLocalDateTime();
-        Instant instant = localDateTime.toInstant(ZoneOffset.UTC);
+        LocalDateTime localDateTime = date.toInstant().atZone(ZoneOffset.systemDefault()).toLocalDateTime();
+        Instant instant = localDateTime.atZone(ZoneOffset.systemDefault()).toInstant();
         Instant startInstant = instant.minus(Duration.ofHours(24));
         Instant endInstant = instant.plus(Duration.ofHours(48));
 
@@ -170,7 +195,7 @@ public class BookingService {
 
 
     private Date getEndOfDay(Date date) {
-        LocalDateTime now = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        LocalDateTime now = date.toInstant().atZone(ZoneOffset.systemDefault()).toLocalDateTime();
         LocalDateTime endOfDay = LocalDateTime
                 .of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 23, 59, 59);
         Date resultDate = Date.from(endOfDay.atZone(ZoneId.systemDefault()).toInstant());
@@ -178,7 +203,7 @@ public class BookingService {
     }
 
     private Date getStartOfDay(Date date) {
-        LocalDateTime now = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        LocalDateTime now = date.toInstant().atZone(ZoneOffset.systemDefault()).toLocalDateTime();
         LocalDateTime startOfDate = LocalDateTime
                 .of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0, 0);
         Date resultDate = Date.from(startOfDate.atZone(ZoneId.systemDefault()).toInstant());

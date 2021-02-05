@@ -26,10 +26,10 @@ public class CustomerWebServiceController {
         this.carService = carService;
     }
 
-    @GetMapping()
-    public List<Customer> getAllCustomers() {
-        return customerService.getAllCustomers();
-    }
+//    @GetMapping()
+//    public List<Customer> getAllCustomers() {
+//        return customerService.getAllCustomers();
+//    }
 
     @PostMapping()
     public ResponseEntity<Void> addCustomer(@RequestBody Customer customer, UriComponentsBuilder builder) {
@@ -45,7 +45,7 @@ public class CustomerWebServiceController {
         return new ResponseEntity<Customer>(customer, HttpStatus.OK);
     }
 
-    @GetMapping("/find")
+    @GetMapping()
     public List<Customer> getCustomersByCar(@RequestParam String id) {
         return customerService.getCustomersByCar(id);}
 

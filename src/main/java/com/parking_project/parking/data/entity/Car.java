@@ -28,7 +28,7 @@ public class Car {
     @Column(name = "status")
     private StatusType status;
 
-    @ManyToMany(mappedBy = "cars", fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Customer> customers = new ArrayList<>();
 //recursion problem
 //    @OneToMany(mappedBy="car")
