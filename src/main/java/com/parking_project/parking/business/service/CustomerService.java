@@ -58,8 +58,6 @@ public class CustomerService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String fullName) throws UsernameNotFoundException {
-        System.out.println(fullName);
         return customerRepository.findByFullName(fullName);
-
     }
 }
