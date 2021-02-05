@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("registration")
 public class RegistrationWebServiceController {
 
     private final CustomerService customerService;
@@ -18,15 +17,19 @@ public class RegistrationWebServiceController {
         this.customerService = customerService;
     }
 
-    @GetMapping
+    @GetMapping("registration")
     public String registration() {
         return "registration";
     }
 
-    @PostMapping
+    @PostMapping("registration")
     public String registration(@RequestParam String fullName, @RequestParam String phoneNumber, @RequestParam String password) {
         Customer customer = new Customer(fullName, phoneNumber, password);
         customerService.addCustomer(customer);
         return "redirect:api/availableSlots";
+    }
+    @GetMapping("/login")
+    public String login() {
+        return "login";
     }
 }

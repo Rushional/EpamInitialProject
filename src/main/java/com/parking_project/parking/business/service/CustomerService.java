@@ -7,13 +7,16 @@ import com.parking_project.parking.data.repositoty.CarRepository;
 import com.parking_project.parking.data.repositoty.CustomerCarRepository;
 import com.parking_project.parking.data.repositoty.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
 
 @Service
-public class CustomerService {
+public class CustomerService implements UserDetailsService {
     private final CustomerRepository customerRepository;
     private final CarRepository carRepository;
     private final CustomerCarRepository customerCarRepository;
@@ -65,4 +68,8 @@ public class CustomerService {
         return customerCarRepository.findCustomersByCar(car);
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String fullName) throws UsernameNotFoundException {
+        return customerRepository.findByFullName(fullName);
+    }
 }
