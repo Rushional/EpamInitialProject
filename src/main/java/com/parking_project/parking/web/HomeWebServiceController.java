@@ -9,7 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-@PreAuthorize(value = "hasAuthority('USER')")
+@PreAuthorize(value = "hasAuthority('USER') && hasAuthority('ADMIN')")
 public class HomeWebServiceController {
 
     private final CustomerService customerService;
