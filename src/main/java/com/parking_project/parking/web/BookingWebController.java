@@ -8,6 +8,7 @@ import com.parking_project.parking.data.entity.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -28,6 +29,7 @@ public class BookingWebController {
         this.bookingService = bookingService;
     }
 
+    @PreAuthorize(value = "hasAuthority('USER') or hasAuthority('ADMIN')")
     @GetMapping("/customer/{customer_id}/booking")
     public ResponseEntity<List<Reservation>> getReservationsByCustomerAndId(@PathVariable("customer_id") String id) {
         Customer customer = customerService.getCustomerById(id);
@@ -35,11 +37,13 @@ public class BookingWebController {
         return new ResponseEntity<List<Reservation>>(reservationList, HttpStatus.OK);
     }
 
+    @PreAuthorize(value = "hasAuthority('ADMIN')")
     @GetMapping("/reservations")
     public List<Reservation> getAllReservations() {
         return bookingService.getAllReservations();
     }
 
+    @PreAuthorize(value = "hasAuthority('USER')")
     @GetMapping("/parking/slots/available/date")
     public List<SlotReservation> getAvailableReservationsByDate(@RequestParam String date) {
         LocalDateTime localDateTime = LocalDateTime.parse(date).atZone(ZoneOffset.systemDefault()).toLocalDateTime();
@@ -48,11 +52,13 @@ public class BookingWebController {
 
         return reservations;
     }
+    @PreAuthorize(value = "hasAuthority('USER')")
     @GetMapping("/parking/slots/available")
     public List<SlotReservation> getAvailableSlotsForNow() {
         return this.bookingService.getAvailableSlotsByDate(Date.from(Instant.now()));
     }
 
+    @PreAuthorize(value = "hasAuthority('USER')")
     @PostMapping("/reservation/create")
     public ResponseEntity<Void> createReservation(@RequestParam String slotId, @RequestParam String customerId,
                                                   @RequestParam String carId, @RequestParam String startDate,
