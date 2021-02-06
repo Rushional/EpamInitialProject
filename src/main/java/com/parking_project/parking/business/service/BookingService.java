@@ -28,7 +28,7 @@ public class BookingService {
         this.reservationRepository = reservationRepository;
     }
 
-    public List<Reservation> getAvailableSlotsByDate(Date date) {
+    public List<SlotReservation> getAvailableSlotsByDate(Date date) {
 
         Iterable<ParkingSlot> slots = this.parkingSlotRepository.findAll();
         Map<Long, List<SlotReservation>> reservationSlotsMap = new HashMap<>();
@@ -36,15 +36,9 @@ public class BookingService {
             reservationSlotsMap.put(slot.getId(), new ArrayList<>());
         });
         fillReservationsMapByDate(reservationSlotsMap, date);
-        List<Reservation> reservations = new ArrayList<>();
+        List<SlotReservation> reservations = new ArrayList<>();
         for (List<SlotReservation> list : reservationSlotsMap.values()) {
-            for (SlotReservation slotReservation : list) {
-                Reservation reservation = new Reservation();
-                reservation.setParkingSlot(parkingSlotRepository.findById(slotReservation.getSlotId()).orElseThrow());
-                reservation.setStartDate(slotReservation.getStart());
-                reservation.setEndDate(slotReservation.getEnd());
-                reservations.add(reservation);
-            }
+            reservations.addAll(list);
         }
         return reservations;
     }
@@ -52,7 +46,6 @@ public class BookingService {
 
     private void fillReservationsMapByDate(Map<Long, List<SlotReservation>> reservationSlotsMap, Date date) {
         Iterable<Reservation> reservations = getReservationsByDate(date);
-        System.out.println(reservations);
         Iterator<Reservation> iterator = reservations.iterator();
         while (iterator.hasNext()) {
             Reservation reservation = iterator.next();
@@ -64,7 +57,6 @@ public class BookingService {
             if ((!reservation.getEndDate().equals(durationEnd)) && reservation.getEndDate().before(durationEnd)) {
                 SlotReservation slotReservation = new SlotReservation();
                 slotReservation.setSlotId(reservation.getParkingSlot().getId());
-                slotReservation.setDescription(reservation.getParkingSlot().getDescription());
                 slotReservation.setStart(reservation.getEndDate());
                 slotReservation.setEnd(durationEnd);
 
@@ -210,7 +202,7 @@ public class BookingService {
         LocalDateTime endLocalDateTime = LocalDateTime.parse(endDate);
         Date end = Date.from(endLocalDateTime.atZone(ZoneOffset.UTC).toInstant());
 
-        if(start.equals(end) || start.after(end) || startLocalDateTime.plusDays(1).isBefore(endLocalDateTime)) {
+        if (start.equals(end) || start.after(end) || startLocalDateTime.plusDays(1).isBefore(endLocalDateTime)) {
             return false;
         }
 
@@ -238,14 +230,25 @@ public class BookingService {
         Date end = Date.from(endDate.toInstant());
         java.sql.Date sqlStart = new java.sql.Date(start.getTime());
         java.sql.Date sqlEnd = new java.sql.Date(end.getTime());
-        List<Reservation> reservations = new ArrayList<>(this.reservationRepository.findReservationsByStartDateGreaterThanEqualAndStartDateLessThanEqual(sqlStart, sqlEnd));
+        List<Reservation> reservations = new ArrayList<>(reservationRepository
+                .findReservationsByStartDateGreaterThanEqualAndStartDateLessThanEqual(sqlStart, sqlEnd));
         List<Reservation> slotReservations = new ArrayList<>();
         reservations.forEach(reservation -> {
-            if (reservation.getParkingSlot().getId().equals(Long.valueOf(slotId))) {
+            if (reservation.getParkingSlot().getId().equals(Long.valueOf(slotId)) &&
+                    reservation.getParkingSlot().getStatus().equals(StatusType.ACTIVE)) {
                 slotReservations.add(reservation);
             }
         });
 
         return slotReservations.isEmpty();
+    }
+
+    public void removeReservationBySlotAfterDate(String slotId, Date startDate) {
+        Date start = Date.from(startDate.toInstant());
+        java.sql.Date sqlStart = new java.sql.Date(start.getTime());
+        ParkingSlot parkingSlot = parkingSlotRepository.findById(Long.valueOf(slotId)).orElseThrow();
+        List<Reservation> reservations = reservationRepository
+                .findReservationsByParkingSlotAndStartDateGreaterThanEqual(parkingSlot, sqlStart);
+        reservations.forEach(reservationRepository::delete);
     }
 }

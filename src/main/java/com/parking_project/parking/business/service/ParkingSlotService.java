@@ -6,17 +6,21 @@ import com.parking_project.parking.data.repositoty.ParkingSlotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 @Service
 public class ParkingSlotService {
     private final ParkingSlotRepository parkingSlotRepository;
+    private final BookingService bookingService;
 
     @Autowired
-    public ParkingSlotService(ParkingSlotRepository parkingSlotRepository) {
+    public ParkingSlotService(ParkingSlotRepository parkingSlotRepository, BookingService bookingService) {
         this.parkingSlotRepository = parkingSlotRepository;
+        this.bookingService = bookingService;
     }
 
     public List<ParkingSlot> getAllSlots() {
@@ -49,6 +53,7 @@ public class ParkingSlotService {
     public void removeParkingSlot(String id) {
         ParkingSlot tmpParkingSlot = getSlotById(Long.valueOf(id));
         tmpParkingSlot.setStatus(StatusType.DISABLED);
+        bookingService.removeReservationBySlotAfterDate(id, Date.from(Instant.now()));
         parkingSlotRepository.save(tmpParkingSlot);
         parkingSlotRepository.flush();
     }

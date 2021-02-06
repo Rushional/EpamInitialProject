@@ -13,15 +13,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/cars")
+@RequestMapping("/api/cars")
 public class CarWebServiceController {
     private final CarService carService;
-    private final CustomerService customerService;
 
     @Autowired
-    public CarWebServiceController(CarService carService, CustomerService customerService) {
+    public CarWebServiceController(CarService carService) {
         this.carService = carService;
-        this.customerService = customerService;
     }
 
     @GetMapping("/car/{id}")
@@ -35,15 +33,13 @@ public class CarWebServiceController {
         return carService.getAllCars();
     }
 
-    @PostMapping("/car")
-    public ResponseEntity<Void> addCar(@RequestParam String licensePlate, @RequestParam String customerId, UriComponentsBuilder builder) {
+    @PostMapping("/car/create")
+    public ResponseEntity<Void> addCar(@RequestParam String licensePlate, @RequestParam String customerId) {
         carService.addCar(licensePlate, customerId);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path("/add/{id}").buildAndExpand(licensePlate, customerId).toUri());
-        return new ResponseEntity<>(headers, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/car")
+    @PutMapping("/car/{id}")
     public ResponseEntity<Void> updateCar(@RequestBody Car car, UriComponentsBuilder builder) {
         carService.updateCar(car);
         HttpHeaders headers = new HttpHeaders();
@@ -51,14 +47,14 @@ public class CarWebServiceController {
         return new ResponseEntity<>(headers, HttpStatus.OK);
     }
 
-    @GetMapping("/find")
-    public List<Car> getCarsByCustomer(@RequestParam String id) {
-        return carService.getCarsByCustomers(id);
+    @GetMapping("/{id}/cars")
+    public List<Car> getCarsByCustomer(@PathVariable String id) {
+        return carService.getCarsByCustomer(id);
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<Void> removeCarById(@PathVariable("id") String id) {
-        carService.removeCar(id);
+    @DeleteMapping("/remove")
+    public ResponseEntity<Void> removeCarById(@RequestParam String licensePlate) {
+        carService.removeCar(licensePlate);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -1,5 +1,8 @@
 package com.parking_project.parking.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,10 +30,12 @@ public class Customer implements UserDetails {
     private String password;
     @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JoinTable(
-            name = "customer_car",
-            joinColumns = {@JoinColumn(name = "customer_id")},
-            inverseJoinColumns = {@JoinColumn(name = "license_plate")}
+            name = "car_customers",
+            joinColumns = {@JoinColumn(name = "\t\n" +
+                    "customers_customer_id")},
+            inverseJoinColumns = {@JoinColumn(name = "car_license_plate")}
     )
+    @JsonIgnore
     List<Car> cars;
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "customer_id"))

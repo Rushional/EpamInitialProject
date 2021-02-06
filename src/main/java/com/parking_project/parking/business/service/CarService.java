@@ -33,7 +33,6 @@ public class CarService {
         car.setStatus(StatusType.ACTIVE);
         car.setLicensePlate(licensePlate);
         car.setCustomers(customerList);
-        System.out.println(car.getCustomers());
         carRepository.save(car);
         carRepository.flush();
     }
@@ -63,10 +62,16 @@ public class CarService {
         return carRepository.findAll();
     }
 
-    public List<Car> getCarsByCustomers(String customerId) {
+    public List<Car> getCarsByCustomer(String customerId) {
         Long id = Long.valueOf(customerId);
         Customer customer = customerRepository.findCustomerById(id);
-        System.out.println(customerId);
-        return carCustomerRepository.findCarsByCustomer(customer);
+        List<Car> cars = carCustomerRepository.findCarsByCustomer(customer);
+        List<Car> availableCars = new ArrayList<>();
+        cars.forEach(car -> {
+            if (car.getStatus().equals(StatusType.ACTIVE)) {
+                availableCars.add(car);
+            }
+        });
+        return availableCars;
     }
 }
