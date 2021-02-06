@@ -33,7 +33,9 @@ public class BookingService {
         Iterable<ParkingSlot> slots = this.parkingSlotRepository.findAll();
         Map<Long, List<SlotReservation>> reservationSlotsMap = new HashMap<>();
         slots.forEach(slot -> {
-            reservationSlotsMap.put(slot.getId(), new ArrayList<>());
+            if (slot.getStatus().equals(StatusType.ACTIVE)) {
+                reservationSlotsMap.put(slot.getId(), new ArrayList<>());
+            }
         });
         fillReservationsMapByDate(reservationSlotsMap, date);
         List<SlotReservation> reservations = new ArrayList<>();
@@ -60,8 +62,8 @@ public class BookingService {
                 slotReservation.setStart(reservation.getEndDate());
                 slotReservation.setEnd(durationEnd);
 
-                List<SlotReservation> currentSlot = reservationSlotsMap.get(reservation.getParkingSlot().getId());
-                currentSlot.add(slotReservation);
+                List<SlotReservation> slotReservations = reservationSlotsMap.get(reservation.getParkingSlot().getId());
+                slotReservations.add(slotReservation);
             }
         }
         fillFirstReservationDates(reservations, reservationSlotsMap, getStartOfDay(date));
@@ -126,7 +128,8 @@ public class BookingService {
         return firstEndTime;
     }
 
-    public void fillFirstReservationDates(Iterable<Reservation> reservations, Map<Long, List<SlotReservation>> reservationsMap, Date date) {
+    public void fillFirstReservationDates(Iterable<Reservation> reservations, Map<Long, List<SlotReservation>> reservationsMap, Date day) {
+        Date date = Date.from(day.toInstant());
         for (Long slotId : reservationsMap.keySet()) {
             Date first = null;
             for (Reservation reservation : reservations) {
@@ -176,7 +179,7 @@ public class BookingService {
 
         java.sql.Date sqlStart = new java.sql.Date(startDate.getTime());
         java.sql.Date sqlEnd = new java.sql.Date(endDate.getTime());
-        return this.reservationRepository.findReservationsByStartDateGreaterThanEqualAndEndDateLessThanEqual(sqlStart, sqlEnd);
+        return reservationRepository.findReservationsByStartDateGreaterThanEqualAndEndDateLessThanEqual(sqlStart, sqlEnd);
     }
 
 
@@ -209,6 +212,7 @@ public class BookingService {
         if (!isFreeSlot(slotId, start, end)) {
             return false;
         }
+
         ParkingSlot parkingSlot = parkingSlotRepository.findById(Long.valueOf(slotId)).orElseThrow();
         Customer customer = customerRepository.findCustomerById(Long.valueOf(customerId));
         Car car = carRepository.findById(carId).orElseThrow();
@@ -226,21 +230,28 @@ public class BookingService {
     }
 
     private boolean isFreeSlot(String slotId, Date startDate, Date endDate) {
-        Date start = Date.from(startDate.toInstant());
-        Date end = Date.from(endDate.toInstant());
-        java.sql.Date sqlStart = new java.sql.Date(start.getTime());
-        java.sql.Date sqlEnd = new java.sql.Date(end.getTime());
-        List<Reservation> reservations = new ArrayList<>(reservationRepository
-                .findReservationsByStartDateGreaterThanEqualAndStartDateLessThanEqual(sqlStart, sqlEnd));
-        List<Reservation> slotReservations = new ArrayList<>();
-        reservations.forEach(reservation -> {
-            if (reservation.getParkingSlot().getId().equals(Long.valueOf(slotId)) &&
-                    reservation.getParkingSlot().getStatus().equals(StatusType.ACTIVE)) {
-                slotReservations.add(reservation);
-            }
-        });
+        ParkingSlot parkingSlot = parkingSlotRepository.findById(Long.parseLong(slotId)).orElseThrow();
+        if (!parkingSlot.getStatus().equals(StatusType.ACTIVE)) {
+            return false;
+        }
 
-        return slotReservations.isEmpty();
+        LocalDateTime dateTimeStart = startDate.toInstant().atZone(ZoneOffset.UTC).toLocalDateTime();
+        LocalDate startDay = LocalDate.of(dateTimeStart.getYear(), dateTimeStart.getMonth(), dateTimeStart.getDayOfMonth());
+        LocalDateTime endTimeStart =endDate.toInstant().atZone(ZoneOffset.UTC).toLocalDateTime();
+        LocalDate endDay = LocalDate.of(endTimeStart.getYear(), endTimeStart.getMonth(), endTimeStart.getDayOfMonth());
+
+        Set<SlotReservation> available = new HashSet<>(getAvailableSlotsByDate(startDate));
+        if (!startDay.equals(endDay)) {
+            available.addAll(getAvailableSlotsByDate(endDate));
+        }
+
+        for (SlotReservation slotReservation : available) {
+            if ((slotReservation.getStart().before(startDate) || slotReservation.getStart().equals(startDate))
+                    && (slotReservation.getEnd().after(endDate)) || slotReservation.getEnd().equals(endDate)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void removeReservationBySlotAfterDate(String slotId, Date startDate) {
