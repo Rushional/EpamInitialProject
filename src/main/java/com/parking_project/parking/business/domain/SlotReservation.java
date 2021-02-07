@@ -1,58 +1,42 @@
 package com.parking_project.parking.business.domain;
 
+import java.util.Date;
+
 public class SlotReservation {
-    private long id;
-    private long car_id;
-    private long customer_id;
-    private String description;
-    private String status;
-    private String customerName;
+    private long slotId;
+    private Date start;
+    private Date end;
 
-    public long getSlot_id() {
-        return id;
+    public long getSlotId() {
+        return slotId;
     }
 
-    public void setId(long slot_id) {
-        this.id = slot_id;
+    public void setSlotId(long slotId) {
+        this.slotId = slotId;
     }
 
-    public long getCar_id() {
-        return car_id;
+    public Date getStart() {
+        return start;
     }
 
-    public void setCar_id(long car_id) {
-        this.car_id = car_id;
+    public void setStart(Date start) {
+        this.start = start;
     }
 
-    public long getCustomer_id() {
-        return customer_id;
+    public Date getEnd() {
+        return end;
     }
 
-    public void setCustomer_id(long customer_id) {
-        this.customer_id = customer_id;
+    public void setEnd(Date end) {
+        this.end = end;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    @Override
+    public String toString() {
+        return "SlotReservation{" +
+                "slotId=" + slotId +
+                ", start=" + start +
+                ", end=" + end +
+                '}';
     }
 }

@@ -1,13 +1,13 @@
 package com.parking_project.parking.web;
 
+import com.parking_project.parking.business.service.CarService;
 import com.parking_project.parking.business.service.CustomerService;
 import com.parking_project.parking.data.entity.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -16,28 +16,39 @@ import java.util.List;
 public class CustomerWebServiceController {
 
     private final CustomerService customerService;
+    public final CarService carService;
 
     @Autowired
-    public CustomerWebServiceController(CustomerService customerService) {
+    public CustomerWebServiceController(CustomerService customerService, CarService carService) {
         this.customerService = customerService;
+        this.carService = carService;
     }
 
-    @GetMapping("/customer")
+    @PreAuthorize(value = "hasAuthority('ADMIN')")
+    @GetMapping("/customers")
     public List<Customer> getAllCustomers() {
         return customerService.getAllCustomers();
     }
 
-    @PostMapping("/customer")
-    public ResponseEntity<Void> addCustomer(@RequestBody Customer customer, UriComponentsBuilder builder) {
-        customerService.addCustomer(customer);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path("/api/customer/{id}").buildAndExpand(customer.getId()).toUri());
-        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+    @PreAuthorize(value = "hasAuthority('USER') or hasAuthority('ADMIN')")
+    @PostMapping("/customer/create")
+    public ResponseEntity<Void> addCustomer(@RequestParam String fullName, @RequestParam String password,
+                                            @RequestParam String phoneNumber) {
+        customerService.addCustomer(fullName, password, phoneNumber);
+        return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
-    @PutMapping("/customer")
-    public ResponseEntity<Customer> updateCustomer(@RequestBody Customer customer) {
+    @PreAuthorize(value = "hasAuthority('ADMIN')")
+    @PutMapping("/customer/update")
+    public ResponseEntity<Void> updateCustomer(@RequestBody Customer customer) {
         customerService.updateCustomer(customer);
-        return new ResponseEntity<Customer>(customer, HttpStatus.OK);
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
+
+    @PreAuthorize(value = "hasAuthority('ADMIN')")
+    @GetMapping("/customers/{id}/find")
+    public List<Customer> getCustomersByCar(@PathVariable String id) {
+        return customerService.getCustomersByCar(id);
+    }
+
 }

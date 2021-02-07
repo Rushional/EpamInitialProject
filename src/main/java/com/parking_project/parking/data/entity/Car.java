@@ -1,6 +1,8 @@
 package com.parking_project.parking.data.entity;
 
 // Not sure if that's the right import - I totally might be using wrong annotations
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,11 +26,15 @@ public class Car {
     @Column(name = "license_plate", length = 16, nullable = false, unique = true)
     private String licensePlate;
 
-    @ManyToMany(mappedBy = "cars", fetch = FetchType.LAZY)
-    private List<Customer> customers = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private StatusType status;
 
-    @OneToMany(mappedBy="car")
-    private List<Reservation> reservations = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Customer> customers = new ArrayList<>();
+//recursion problem
+//    @OneToMany(mappedBy="car")
+//    private List<Reservation> reservations = new ArrayList<>();
 
 //    TODO: do we need equals and hashCode?
 
