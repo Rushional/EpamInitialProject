@@ -27,6 +27,7 @@ public class ParkingSlot {
     @Column(name = "status")
     private StatusType status;
 
-    @OneToMany(mappedBy="parkingSlot")
-    private List<Reservation> reservations = new ArrayList<>();
+//recursion problem
+//    @OneToMany(mappedBy="parkingSlot")
+//    private List<Reservation> reservations = new ArrayList<>();
 }

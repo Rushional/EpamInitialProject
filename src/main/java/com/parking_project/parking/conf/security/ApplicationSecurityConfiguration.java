@@ -29,7 +29,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
                 .anyRequest().authenticated()
             .and()
                 .formLogin()
-                .loginPage("/login").defaultSuccessUrl("/api/customer")
+                .loginPage("/login").defaultSuccessUrl("/home")
                 .permitAll()
             .and()
                 .logout()
