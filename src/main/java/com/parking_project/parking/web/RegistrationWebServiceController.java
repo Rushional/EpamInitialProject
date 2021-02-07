@@ -30,7 +30,7 @@ public class RegistrationWebServiceController {
     @PostMapping("registration")
     public String registration(@RequestParam String fullName, @RequestParam String phoneNumber, @RequestParam String password) {
         customerService.addCustomer(fullName, password, phoneNumber);
-        return "redirect:api/parking/slots/available";
+        return "redirect:/login";
     }
     @GetMapping("/login")
     public String login() {
