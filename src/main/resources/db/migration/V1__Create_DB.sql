@@ -1,0 +1,13 @@
+create sequence hibernate_sequence start 1 increment 1;
+create table car (license_plate varchar(16) not null, status varchar(255), primary key (license_plate));
+create table car_customers (customers_customer_id int8 not null, car_license_plate varchar(16) not null);
+create table customer (customer_id int8 not null, full_name varchar(128) not null, password varchar(255) not null, phone_number varchar(16) not null, primary key (customer_id));
+create table parking_slot (slot_id int8 not null, description varchar(2048), status varchar(255), primary key (slot_id));
+create table reservation (reservation_id int8 not null, end_time timestamp not null, start_time timestamp not null, license_plate varchar(16) not null, customer_id int8, slot_id int8 not null, primary key (reservation_id));
+create table user_role (customer_id int8 not null, roles varchar(255));
+alter table if exists car_customers add constraint car_customers_car_license_plate_FK foreign key (car_license_plate) references car;
+alter table if exists car_customers add constraint car_customers_customers_customer_id_FK foreign key (customers_customer_id) references customer;
+alter table if exists reservation add constraint reservation_car_FK foreign key (license_plate) references car;
+alter table if exists reservation add constraint reservation_customer_id_FK foreign key (customer_id) references customer;
+alter table if exists reservation add constraint reservation_slot_id_FK foreign key (slot_id) references parking_slot;
+alter table if exists user_role add constraint user_role_customer_id_FK foreign key (customer_id) references customer;
