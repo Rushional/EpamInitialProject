@@ -69,6 +69,13 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+		    <groupId>org.junit.jupiter</groupId>
+		    <artifactId>junit-jupiter-engine</artifactId>
+			<!-- I specified this version because that's what I have on my PC. May be a bad idea!👌🏻👌🏻😎😎😎 -->
+		    <version>5.7.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
